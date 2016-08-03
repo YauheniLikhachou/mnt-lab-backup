@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project name="Project_1" basedir="." default="art_distrib">
+<property file="config/project.properties"/>
+  
+  <presetdef name="javc">
+  	<javac includeantruntime="false" classpathref="path"/>
+  </presetdef>
+
+  <path id="path">
+	<fileset dir="${lib_dir}">
+  		<include name="*.jar"/>
+  	</fileset>
+  </path>
+
+  <target name="clean">
+  	<delete dir="${build_dir}"/>
+  	<delete dir="${test_dir}"/>
+  	<delete dir="${dist_dir}"/>
+	<echo> Clean done! </echo>
+  </target>
+
+  <target name="init" depends="clean">
+  	<mkdir dir="${build_dir}"/>
+  	<mkdir dir="${test_dir}"/>
+  	<mkdir dir="${dist_dir}"/>
+	<echo> Init done! </echo>
+  </target>
+
+  <target name="compile" depends="init">
+  	<javc srcdir="${src}" destdir="${build_dir}"/>
+	<javc srcdir="${src_dir}" destdir="${test_dir}"/>
+	<echo> Compile comlited! </echo>
+  </target>
+
+ <target name="test" depends="compile">
+  	<junit printsummary="on" haltonfailure="yes" fork="true">
+  		<classpath>
+  			<path refid="path"/>
+        		<pathelement location="${test_dir}"/>
+  		</classpath>
+  		<batchtest>
+      			<fileset dir="${src_dir}" includes="**/test.java"/>
+    		</batchtest>
+  	</junit>
+	<echo> Test passed! </echo>
+  </target>
+
+  <target name="jar" depends="test">
+  	<jar destfile="${dist_dir}/task-project.jar" basedir="${build_dir}"/>
+	<echo> Jar completed! </echo>
+  </target>
+
+  <target name="art_distrib" depends="jar">
+  	<zip destfile="${dist_dir}/task-project-${time}.zip">
+  		<zipfileset dir="${config_dir}"/>
+  		<zipfileset dir="${dist_dir}"/>
+  		<zipfileset dir="${lib_dir}" prefix="lib"/>
+  	</zip>
+	<echo> Distribution artifact done! </echo>
+  </target>
+ 
+  <tstamp>
+        <format property="time" pattern="||yyyy-mm-dd|HH:mm:ss||"/>
+  </tstamp>
+
+
+</project>
