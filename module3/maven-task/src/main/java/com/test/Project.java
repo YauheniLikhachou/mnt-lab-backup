@@ -7,6 +7,11 @@ class Project {
 
   public static void test() {
     System.out.println("test");
+ System.out.println("test"); 
+System.out.println("test");
+ System.out.println("test");
+ System.out.println("test");
+System.out.println("Changed info!!!");
   }
   
   public static void main(String[] args) {
